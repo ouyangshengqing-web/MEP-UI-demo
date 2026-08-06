@@ -488,17 +488,19 @@ function goToPage(page) {
 
 /* 主内容区 */
 .main-content {
-  flex: 1;
-  min-width: 0;
-  margin-left: v-bind(mainContentMargin + 'px');
-  margin-top: 60px;
-  margin-right: 16px;
-  padding: 16px;
+  position: fixed;
+  top: 60px;
+  left: v-bind(mainContentMargin + 16 + 'px');
+  right: 16px;
+  bottom: 0;
+  margin-left: 0;
+  margin-top: 0;
+  margin-right: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 60px);
   overflow: hidden;
-  transition: margin-left 0.2s;
+  transition: left 0.2s;
 }
 
 /* 标题卡片 */
@@ -506,7 +508,7 @@ function goToPage(page) {
   background: #ffffff;
   border-radius: 4px;
   padding: 8px 24px;
-  margin-bottom: 16px;
+  margin: 16px 0;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -552,6 +554,7 @@ function goToPage(page) {
   background: #ffffff;
   border-radius: 4px;
   padding: 11px 20px 31px;
+  margin: 0 0 16px 0;
   min-width: 0;
   flex: 1;
   min-height: 0;
