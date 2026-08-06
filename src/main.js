@@ -1,11 +1,17 @@
 import { createApp } from 'vue'
-import ArcoVue from '@arco-design/web-vue'
-import ArcoVueIcon from '@arco-design/web-vue/es/icon'
-import '@arco-design/web-vue/dist/arco.css'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import './styles/global.css'
 import App from './App.vue'
 
 const app = createApp(App)
-app.use(ArcoVue)
-app.use(ArcoVueIcon)
+app.use(ElementPlus, { locale: zhCn })
+
+// 注册所有图标
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+
 app.mount('#app')

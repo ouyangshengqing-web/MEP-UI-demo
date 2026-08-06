@@ -1,9 +1,18 @@
 <template>
   <div class="page-wrap">
-    <SchemeComparison />
+    <LoginPage v-if="!isLoggedIn" @login-success="handleLoginSuccess" />
+    <SchemeComparison v-else />
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import LoginPage from './views/LoginPage.vue'
 import SchemeComparison from './components/SchemeComparison.vue'
+
+const isLoggedIn = ref(false)
+
+const handleLoginSuccess = () => {
+  isLoggedIn.value = true
+}
 </script>

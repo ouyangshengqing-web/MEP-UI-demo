@@ -1,7 +1,7 @@
 {
   "name": "me-ie-design-system",
   "version": "1.0.0",
-  "description": "机电智能一体化设计系统 - 基于 Arco Design Vue",
+  "description": "机电智能一体化设计系统 - 基于 Element Plus",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@arco-design/web-vue": "^2.57.0",
+    "element-plus": "^2.5.0",
+    "@element-plus/icons-vue": "^2.3.0",
     "echarts": "^5.5.0",
     "vue": "^3.4.0",
     "vue-echarts": "^7.0.0"

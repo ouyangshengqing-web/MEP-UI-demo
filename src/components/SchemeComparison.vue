@@ -13,23 +13,23 @@
       
       <nav class="navbar-tabs">
         <div class="tab-item" :class="{ active: activeTab === 'project' }" @click="activeTab = 'project'">
-          <Icon name="folder" />
+          <el-icon><Folder /></el-icon>
           <span>项目管理</span>
         </div>
         <div class="tab-item" :class="{ active: activeTab === 'collaborate' }" @click="activeTab = 'collaborate'">
-          <Icon name="team" />
+          <el-icon><UserFilled /></el-icon>
           <span>协同设计</span>
         </div>
         <div class="tab-item" :class="{ active: activeTab === 'comparison' }" @click="activeTab = 'comparison'">
-          <Icon name="apps" />
+          <el-icon><Grid /></el-icon>
           <span>方案比选</span>
         </div>
         <div class="tab-item" :class="{ active: activeTab === 'check' }" @click="activeTab = 'check'">
-          <Icon name="check-circle" />
+          <el-icon><CircleCheckFilled /></el-icon>
           <span>限额校验</span>
         </div>
         <div class="tab-item" :class="{ active: activeTab === 'collision' }" @click="activeTab = 'collision'">
-          <Icon name="alert-circle" />
+          <el-icon><WarningFilled /></el-icon>
           <span>碰撞检测</span>
         </div>
       </nav>
@@ -37,37 +37,44 @@
       <div class="navbar-right">
         <span class="project-name">XXXX项目（B2层）</span>
         <div class="notification-btn">
-          <Icon name="notification" />
+          <el-icon><Bell /></el-icon>
         </div>
-        <a-avatar :size="36" class="avatar">
+        <el-avatar :size="36" class="avatar">
           <img src="/建筑工人3D头像.png" alt="avatar" />
-        </a-avatar>
+        </el-avatar>
       </div>
     </header>
     
     <!-- 左侧菜单 -->
-    <a-layout-sider
-      v-model:collapsed="collapsed"
-      :breakpoint="'xl'"
-      :width="220"
-      :collapsed-width="48"
-      :hide-trigger="true"
-      :collapsible="true"
-      class="sidebar-sider"
+    <el-aside
+      :width="collapsed ? '64px' : '220px'"
+      class="sidebar-aside"
     >
-      <a-menu
-        v-model:selected-keys="selectedKeys"
-        v-model:collapsed="collapsed"
+      <el-menu
+        :default-active="selectedKey"
         mode="vertical"
-        :show-collapse-button="true"
+        :collapse="collapsed"
+        :collapse-transition="false"
         class="sidebar-menu"
+        @select="handleMenuSelect"
       >
-        <a-menu-item key="comparison">
-          <template #icon><Icon name="apps" /></template>
-          <span>优化方案比选</span>
-        </a-menu-item>
-      </a-menu>
-    </a-layout-sider>
+        <el-menu-item index="comparison">
+          <el-icon><Grid /></el-icon>
+          <template #title>优化方案比选</template>
+        </el-menu-item>
+      </el-menu>
+      <!-- 折叠/展开按钮 -->
+      <div
+        class="sidebar-collapse-btn"
+        :class="{ 'is-collapsed': collapsed }"
+        @click="toggleCollapse"
+      >
+        <el-icon>
+          <Fold v-if="!collapsed" />
+          <Expand v-else />
+        </el-icon>
+      </div>
+    </el-aside>
     
     <!-- 主内容区 -->
     <main class="main-content">
@@ -87,11 +94,11 @@
         <div class="query-title">查询条件</div>
         <div class="query-form">
           <div class="form-row">
-            <label class="form-label" style="padding-left: 6px;">环境</label>
-            <a-radio-group v-model="environment" class="env-radio-group">
-              <a-radio value="test">测试环境</a-radio>
-              <a-radio value="prod">生产环境</a-radio>
-            </a-radio-group>
+            <label class="form-label">环境</label>
+            <el-radio-group v-model="environment" class="env-radio-group">
+              <el-radio value="test">测试环境</el-radio>
+              <el-radio value="prod">生产环境</el-radio>
+            </el-radio-group>
           </div>
           
           <div class="form-row">
@@ -100,70 +107,83 @@
                 <span class="required">*</span>
                 <span>类目</span>
               </label>
-              <a-select
+              <el-select
                 v-model="selectedCategories"
-                mode="multiple"
+                multiple
                 placeholder="请选择"
                 class="category-select"
-                allow-clear
+                clearable
+                collapse-tags
+                collapse-tags-tooltip
+                :max-collapse-tags="1"
+                popper-class="category-select-dropdown"
               >
-                <a-option value="风机盘管">风机盘管</a-option>
-                <a-option value="空调机组">空调机组</a-option>
-                <a-option value="新风系统">新风系统</a-option>
-                <a-option value="通风设备">通风设备</a-option>
-                <a-option value="阀门管件">阀门管件</a-option>
-              </a-select>
+                <template #header>
+                  <el-checkbox
+                    v-model="checkAll"
+                    :indeterminate="indeterminate"
+                    class="category-check-all"
+                    @change="handleCheckAll"
+                  >
+                    全选
+                  </el-checkbox>
+                </template>
+                <el-option
+                  v-for="item in categoryOptions"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="item.label"
+                />
+              </el-select>
             </div>
           </div>
           
           <div class="form-actions">
-            <a-button type="primary" class="search-btn" @click="handleSearch">
-              <template #icon><Icon name="search" /></template>
+            <el-button type="primary" :icon="Search" @click="handleSearch">
               查询商品
-            </a-button>
-            <a-button class="reset-btn" @click="handleReset">
-              <template #icon><Icon name="refresh" /></template>
+            </el-button>
+            <el-button :icon="Refresh" @click="handleReset">
               重置
-            </a-button>
+            </el-button>
           </div>
         </div>
         
         <!-- 数据表格 -->
         <div class="table-container">
-          <a-table
-            :columns="columns"
+          <el-table
             :data="tableData"
-            :pagination="false"
-            :scroll="{ x: '100%', y: '100%' }"
-            :bordered="{ cell: true }"
+            :border="true"
             stripe
             class="data-table"
-          />
+            height="calc(100vh - 420px)"
+            :scrollbar-always-on="true"
+            style="width: 100%"
+          >
+            <el-table-column type="index" label="序号" width="80" align="center" />
+            <el-table-column prop="categoryName" label="类目名称" min-width="90" show-overflow-tooltip />
+            <el-table-column prop="model" label="材料型号" min-width="220" show-overflow-tooltip />
+            <el-table-column prop="spuModel" label="SPU型号" min-width="90" show-overflow-tooltip />
+            <el-table-column prop="supplier" label="供应商名称" min-width="180" show-overflow-tooltip />
+            <el-table-column prop="price" label="销售价（元）" width="140" sortable>
+              <template #default="{ row }">
+                <span class="price-text">{{ row.price.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
           
           <!-- 分页 -->
           <div class="pagination-container">
-            <div class="pagination-info">共 {{ total }} 条</div>
-            <div class="pagination">
-              <div class="page-btn prev" :class="{ disabled: currentPage === 1 }">
-                <Icon name="left" />
-              </div>
-              <div 
-                v-for="page in visiblePages" 
-                :key="page"
-                class="page-number"
-                :class="{ active: page === currentPage, ellipsis: page === '...' }"
-                @click="page !== '...' && goToPage(page)"
-              >
-                {{ page }}
-              </div>
-              <div class="page-btn next" :class="{ disabled: currentPage === totalPages }">
-                <Icon name="right" />
-              </div>
-              <div class="page-size-selector">
-                <span>10条/页</span>
-                <Icon name="down" />
-              </div>
-            </div>
+            <el-pagination
+              v-model:current-page="currentPage"
+              v-model:page-size="pageSize"
+              :page-sizes="[10, 20, 50, 100]"
+              :total="total"
+              layout="total, prev, pager, next, sizes, jumper"
+              :pager-count="5"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              background
+            />
           </div>
         </div>
       </div>
@@ -172,78 +192,65 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import Icon from './Icon.vue'
+import { ref, computed, watch } from 'vue'
+import {
+  Folder,
+  UserFilled,
+  Grid,
+  CircleCheckFilled,
+  WarningFilled,
+  Bell,
+  Search,
+  Refresh,
+  Fold,
+  Expand
+} from '@element-plus/icons-vue'
 
 // 状态
 const activeTab = ref('comparison')
 const environment = ref('test')
-const selectedCategories = ref([])
 const currentPage = ref(1)
 const pageSize = ref(10)
 
 // 响应式收缩状态
 const collapsed = ref(false)
-const selectedKeys = ref(['comparison'])
+const selectedKey = ref('comparison')
 
 // 计算主内容区左边距
-const mainContentMargin = computed(() => collapsed.value ? 48 : 220)
+const mainContentMargin = computed(() => collapsed.value ? 64 : 220)
 
-// 表格列配置
-const columns = [
-  {
-    title: '序号',
-    dataIndex: 'index',
-    width: 80,
-    align: 'center'
-  },
-  {
-    title: '类目名称',
-    dataIndex: 'categoryName',
-    width: 160,
-    ellipsis: true,
-    tooltip: true
-  },
-  {
-    title: '材料型号',
-    dataIndex: 'model',
-    width: 270,
-    ellipsis: true,
-    tooltip: true
-  },
-  {
-    title: 'SPU型号',
-    dataIndex: 'spuModel',
-    width: 140,
-    ellipsis: true,
-    tooltip: true
-  },
-  {
-    title: '供应商名称',
-    dataIndex: 'supplier',
-    width: 180,
-    ellipsis: true,
-    tooltip: true
-  },
-  {
-    title: '销售价（元）',
-    dataIndex: 'price',
-    width: 100,
-    ellipsis: true,
-    tooltip: true,
-    sortable: {
-      sortDirections: ['ascend', 'descend']
-    },
-    bodyCellStyle: {
-      color: '#165DFF'
-    },
-    render: ({ record }) =>
-      record.price.toLocaleString('zh-CN', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      })
-  }
+// 类目选项与多选状态
+const categoryOptions = [
+  { value: '风机盘管', label: '风机盘管' },
+  { value: '空调机组', label: '空调机组' },
+  { value: '新风系统', label: '新风系统' },
+  { value: '通风设备', label: '通风设备' },
+  { value: '阀门管件', label: '阀门管件' }
 ]
+const selectedCategories = ref([])
+const checkAll = ref(false)
+const indeterminate = ref(false)
+
+watch(selectedCategories, (val) => {
+  if (val.length === 0) {
+    checkAll.value = false
+    indeterminate.value = false
+  } else if (val.length === categoryOptions.length) {
+    checkAll.value = true
+    indeterminate.value = false
+  } else {
+    indeterminate.value = true
+  }
+})
+
+function handleCheckAll(val) {
+  indeterminate.value = false
+  if (val) {
+    selectedCategories.value = categoryOptions.map((item) => item.value)
+  } else {
+    selectedCategories.value = []
+  }
+}
 
 // 示例数据
 const tableData = ref([
@@ -262,39 +269,6 @@ const tableData = ref([
 // 总数据条数（用于分页）
 const total = ref(93)
 
-// 总页数
-const totalPages = computed(() => Math.ceil(total.value / pageSize.value))
-
-// 可见页码
-const visiblePages = computed(() => {
-  const pages = []
-  const total = totalPages.value
-  const current = currentPage.value
-  
-  if (total <= 7) {
-    for (let i = 1; i <= total; i++) {
-      pages.push(i)
-    }
-  } else {
-    if (current <= 4) {
-      for (let i = 1; i <= 5; i++) pages.push(i)
-      pages.push('...')
-      pages.push(total)
-    } else if (current >= total - 3) {
-      pages.push(1)
-      pages.push('...')
-      for (let i = total - 4; i <= total; i++) pages.push(i)
-    } else {
-      pages.push(1)
-      pages.push('...')
-      for (let i = current - 1; i <= current + 1; i++) pages.push(i)
-      pages.push('...')
-      pages.push(total)
-    }
-  }
-  return pages
-})
-
 // 方法
 function handleSearch() {
   console.log('搜索:', { environment: environment.value, categories: selectedCategories.value })
@@ -303,14 +277,25 @@ function handleSearch() {
 function handleReset() {
   environment.value = 'test'
   selectedCategories.value = []
+  currentPage.value = 1
 }
 
-function handleOptional(record) {
-  console.log('选择:', record)
+function handleSizeChange(val) {
+  pageSize.value = val
+  currentPage.value = 1
+  console.log('每页条数:', val)
 }
 
-function goToPage(page) {
-  currentPage.value = page
+function handleCurrentChange(val) {
+  console.log('当前页:', val)
+}
+
+function handleMenuSelect(index) {
+  selectedKey.value = index
+}
+
+function toggleCollapse() {
+  collapsed.value = !collapsed.value
 }
 </script>
 
@@ -401,11 +386,11 @@ function goToPage(page) {
 }
 
 .tab-item.active {
-  color: #165dff;
-  border-bottom: 2px solid #165dff;
+  color: #409eff;
+  border-bottom: 2px solid #409eff;
 }
 
-.tab-item :deep(.icon) {
+.tab-item :deep(.el-icon) {
   font-size: 14px;
 }
 
@@ -444,46 +429,62 @@ function goToPage(page) {
 }
 
 /* 左侧菜单 */
-/* Arco Layout Sider */
-.sidebar-sider {
+.sidebar-aside {
   position: fixed;
   top: 60px;
   left: 0;
   bottom: 0;
   z-index: 50;
   overflow: hidden;
-}
-
-.sidebar-sider :deep(.arco-layout-sider-children) {
-  overflow: hidden;
+  background: #fff;
 }
 
 .sidebar-menu {
   height: 100%;
-  width: 100% !important;
+  border-right: none;
 }
 
-/* 菜单折叠时隐藏文字，图标居中 */
-.sidebar-menu:deep(.arco-menu-collapsed) {
-  .arco-menu-title {
-    display: none;
-  }
-  .arco-menu-item {
-    justify-content: center;
-    padding: 0 !important;
-  }
+.sidebar-menu:not(.el-menu--collapse) {
+  width: 220px;
 }
 
 /* 菜单选中项样式 */
-.sidebar-menu :deep(.arco-menu-item.arco-menu-selected) {
-  background-color: rgba(22, 93, 255, 0.08) !important;
-  color: #165dff !important;
+.sidebar-menu :deep(.el-menu-item.is-active) {
+  background-color: rgba(64, 158, 255, 0.08) !important;
+  color: #409eff !important;
 }
 
-.sidebar-menu :deep(.arco-menu-item.arco-menu-selected .arco-icon),
-.sidebar-menu :deep(.arco-menu-item.arco-menu-selected .arco-icon svg) {
-  color: #165dff !important;
-  fill: #165dff !important;
+/* 折叠/展开按钮 */
+.sidebar-collapse-btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 16px;
+  cursor: pointer;
+  color: #4e5969;
+  font-size: 16px;
+  border-top: 1px solid #e5e6eb;
+  background: #ffffff;
+  transition: color 0.2s, background 0.2s;
+}
+
+.sidebar-collapse-btn.is-collapsed {
+  justify-content: center;
+  padding: 0;
+}
+
+.sidebar-collapse-btn:hover {
+  color: #409eff;
+  background: #f2f3f5;
+}
+
+.sidebar-collapse-btn :deep(.el-icon) {
+  font-size: 18px;
 }
 
 /* 主内容区 */
@@ -537,7 +538,7 @@ function goToPage(page) {
 .title {
   font-family: 'DingTalk JinBuTi', 'PingFang SC', sans-serif;
   font-size: 24px;
-  color: #165dff;
+  color: #409eff;
   font-style: italic;
   margin: 0 0 4px 0;
   font-weight: normal;
@@ -585,6 +586,7 @@ function goToPage(page) {
   align-items: center;
   width: 100%;
   flex: 1;
+  min-width: 0;
 }
 
 .form-label {
@@ -596,19 +598,26 @@ function goToPage(page) {
 }
 
 .required {
-  color: #f53f3f;
+  color: #f56c6c;
   margin-right: 2px;
 }
 
+/* 类目多选框：占满 form-item 剩余空间，与表格右边缘对齐 */
 .category-select {
   display: block !important;
   width: 100% !important;
-  max-width: 800px !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  flex: 1 1 auto;
 }
 
-.category-select :deep(.arco-select-view) {
-  width: 100% !important;
-  min-width: 0 !important;
+/* 下拉菜单中的"全选"项样式 */
+:deep(.category-select-dropdown) .category-check-all {
+  display: flex;
+  width: 100%;
+  height: unset;
+  padding: 4px 12px;
+  box-sizing: border-box;
 }
 
 .env-radio-group {
@@ -623,24 +632,10 @@ function goToPage(page) {
   padding-left: 98px;
 }
 
-.search-btn {
-  background: #165dff !important;
-  border-color: #165dff !important;
-}
-
-.search-btn :deep(.icon) {
-  font-size: 14px;
-}
-
-.reset-btn {
-  color: #4e5969;
-}
-
 /* 表格 */
 .table-container {
   margin-top: 20px;
-  border: 1px solid #e5e6eb;
-  border-radius: 2px;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -652,92 +647,33 @@ function goToPage(page) {
 .data-table {
   font-size: 14px;
   min-width: 0;
-  flex: 1;
-  min-height: 0;
 }
 
-.data-table :deep(.arco-table-th) {
-  background: #f2f3f5;
+.data-table :deep(.el-table__header th) {
+  background: #f5f7fa;
   font-weight: 500;
   color: #1d2129;
 }
 
-.data-table :deep(.arco-table-td) {
+.data-table :deep(.el-table__cell) {
   color: #1d2129;
 }
 
-.data-table :deep(.arco-table-tr:hover .arco-table-td) {
-  background: #f2f3f5 !important;
+.data-table :deep(.el-table__row:hover > td) {
+  background: #f5f7fa !important;
+}
+
+.price-text {
+  color: #409eff;
 }
 
 /* 分页 */
 .pagination-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 12px 16px;
+  justify-content: flex-end;
+  padding: 12px 0;
   background: #ffffff;
-  border-top: 1px solid #e5e6eb;
+  border-top: 1px solid #ebeef5;
   flex-shrink: 0;
-}
-
-.pagination-info {
-  font-size: 14px;
-  color: #1d2129;
-}
-
-.pagination {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.page-btn,
-.page-number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 4px;
-  border-radius: 2px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #4e5969;
-  transition: all 0.2s;
-}
-
-.page-btn:hover:not(.disabled),
-.page-number:hover:not(.ellipsis) {
-  background: #f2f3f5;
-}
-
-.page-number.active {
-  background: #e8f3ff;
-  color: #165dff;
-}
-
-.page-btn.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.page-size-selector {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 12px;
-  background: #f2f3f5;
-  border-radius: 2px;
-  font-size: 14px;
-  color: #1d2129;
-  margin-left: 8px;
-  cursor: pointer;
-}
-
-.page-size-selector :deep(.icon) {
-  font-size: 12px;
 }
 </style>
