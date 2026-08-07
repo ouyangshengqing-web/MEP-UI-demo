@@ -39,9 +39,27 @@
         <div class="notification-btn">
           <el-icon><Bell /></el-icon>
         </div>
-        <el-avatar :size="36" class="avatar">
-          <img src="/建筑工人3D头像.png" alt="avatar" />
-        </el-avatar>
+        <el-dropdown trigger="click" @command="handleUserCommand">
+          <el-avatar :size="36" class="avatar">
+            <img src="/建筑工人3D头像.png" alt="avatar" />
+          </el-avatar>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="profile">
+                <el-icon><User /></el-icon>
+                用户中心
+              </el-dropdown-item>
+              <el-dropdown-item command="settings">
+                <el-icon><Setting /></el-icon>
+                用户设置
+              </el-dropdown-item>
+              <el-dropdown-item command="logout" divided>
+                <el-icon><SwitchButton /></el-icon>
+                退出登录
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </header>
     
@@ -193,6 +211,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Folder,
   UserFilled,
@@ -203,8 +222,13 @@ import {
   Search,
   Refresh,
   Fold,
-  Expand
+  Expand,
+  User,
+  Setting,
+  SwitchButton
 } from '@element-plus/icons-vue'
+
+const emit = defineEmits(['logout'])
 
 // 状态
 const activeTab = ref('comparison')
@@ -215,6 +239,27 @@ const pageSize = ref(10)
 // 响应式收缩状态
 const collapsed = ref(false)
 const selectedKey = ref('comparison')
+
+// 用户菜单处理
+const handleUserCommand = (command) => {
+  switch (command) {
+    case 'profile':
+      ElMessage.info('跳转到用户中心')
+      break
+    case 'settings':
+      ElMessage.info('跳转到用户设置')
+      break
+    case 'logout':
+      ElMessageBox.confirm('确认退出登录？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        emit('logout')
+      }).catch(() => {})
+      break
+  }
+}
 
 // 计算主内容区左边距
 const mainContentMargin = computed(() => collapsed.value ? 64 : 220)

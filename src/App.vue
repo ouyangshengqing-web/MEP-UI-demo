@@ -1,7 +1,7 @@
 <template>
   <div class="page-wrap">
     <LoginPage v-if="!isLoggedIn" @login-success="handleLoginSuccess" />
-    <SchemeComparison v-else />
+    <SchemeComparison v-else @logout="handleLogout" />
   </div>
 </template>
 
@@ -14,5 +14,9 @@ const isLoggedIn = ref(false)
 
 const handleLoginSuccess = () => {
   isLoggedIn.value = true
+}
+
+const handleLogout = () => {
+  isLoggedIn.value = false
 }
 </script>

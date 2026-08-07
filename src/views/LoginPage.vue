@@ -2,52 +2,11 @@
   <div class="login-page">
     <!-- 左侧背景区域 -->
     <div class="left-section">
-      <div class="background-container">
-        <div class="brand-info">
-          <!-- Logo 区域 -->
-          <div class="logo-container">
-            <div class="logo-box">
-              <svg class="logo-icon" viewBox="0 0 33.912 34" fill="none">
-                <path d="M16.956 0L0 16.956H33.912V0z" fill="#409eff"/>
-                <path d="M16.956 34L0 17.044H33.912V34z" fill="#409eff"/>
-              </svg>
-            </div>
-            <div class="brand-text">
-              <h1 class="brand-title">MEP · AI</h1>
-              <p class="brand-subtitle">机电智能一体化设计系统</p>
-            </div>
-          </div>
-
-          <!-- 功能特性 -->
-          <div class="features">
-            <div class="feature-item">
-              <svg class="feature-icon" viewBox="0 0 18 18" fill="currentColor">
-                <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
-                <path d="M5 9l3 3 5-6" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-              <span>全生命周期管理</span>
-            </div>
-            <div class="feature-item">
-              <svg class="feature-icon" viewBox="0 0 18 18" fill="currentColor">
-                <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
-                <path d="M5 9l3 3 5-6" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-              <span>AI自动化路由</span>
-            </div>
-            <div class="feature-item">
-              <svg class="feature-icon" viewBox="0 0 18 18" fill="currentColor">
-                <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
-                <path d="M5 9l3 3 5-6" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-              <span>BIM深化成果输出</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="background-container"></div>
 
       <!-- 底部版权 -->
       <div class="copyright">
-        2026 © 中国建筑第三工程局工程总承包公司
+        {{ new Date().getFullYear() }} © 中国建筑第三工程局工程总承包公司
       </div>
     </div>
 
@@ -91,8 +50,9 @@
                 :maxlength="20"
               >
                 <template #prefix>
-                  <svg class="input-icon" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 1a4 4 0 00-4 4v2H2a1 1 0 00-1 1v6a1 1 0 001 1h12a1 1 0 001-1V8a1 1 0 00-1-1h-2V5a4 4 0 00-4-4zm-2 4a2 2 0 114 0v2H6V5z"/>
+                  <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="#c9cdd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M4 21v-2a4 4 0 014-4h8a4 4 0 014 4v2"/>
                   </svg>
                 </template>
               </el-input>
@@ -107,8 +67,9 @@
                 :type="showPassword ? 'text' : 'password'"
               >
                 <template #prefix>
-                  <svg class="input-icon" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 1a5 5 0 00-5 5v4H2a1 1 0 00-1 1v4a1 1 0 001 1h12a1 1 0 001-1v-4a1 1 0 00-1-1h-1V6a5 5 0 00-5-5zm-2 5a2 2 0 114 0v2H6V6zm2-5a2 2 0 012 2v2H6V4z"/>
+                  <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="#c9cdd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0110 0v4"/>
                   </svg>
                 </template>
                 <template #suffix>
@@ -136,8 +97,9 @@
                 :maxlength="11"
               >
                 <template #prefix>
-                  <svg class="input-icon" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 1a4 4 0 00-4 4v2H2a1 1 0 00-1 1v6a1 1 0 001 1h12a1 1 0 001-1V8a1 1 0 00-1-1h-2V5a4 4 0 00-4-4zm-2 4a2 2 0 114 0v2H6V5z"/>
+                  <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="#c9cdd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2"/>
+                    <line x1="12" y1="18" x2="12" y2="18.01"/>
                   </svg>
                 </template>
               </el-input>
@@ -153,8 +115,14 @@
                 style="width: calc(100% - 110px)"
               >
                 <template #prefix>
-                  <svg class="input-icon" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 1a5 5 0 00-5 5v4H2a1 1 0 00-1 1v4a1 1 0 001 1h12a1 1 0 001-1v-4a1 1 0 00-1-1h-1V6a5 5 0 00-5-5zm-2 5a2 2 0 114 0v2H6V6zm2-5a2 2 0 012 2v2H6V4z"/>
+                  <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="#c9cdd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="5" width="18" height="14" rx="2"/>
+                    <line x1="7" y1="9" x2="7" y2="9.01"/>
+                    <line x1="11" y1="9" x2="11" y2="9.01"/>
+                    <line x1="15" y1="9" x2="15" y2="9.01"/>
+                    <line x1="7" y1="13" x2="7" y2="13.01"/>
+                    <line x1="11" y1="13" x2="11" y2="13.01"/>
+                    <line x1="15" y1="13" x2="15" y2="13.01"/>
                   </svg>
                 </template>
               </el-input>
@@ -203,6 +171,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { View, Hide } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['login-success'])
 
@@ -243,11 +212,34 @@ const sendCaptcha = () => {
 
 // 登录处理
 const handleLogin = async () => {
+  // 密码登录校验
+  if (loginType.value === 'password') {
+    if (!form.username.trim()) {
+      ElMessage.warning('请输入账号或手机号')
+      return
+    }
+    if (!form.password) {
+      ElMessage.warning('请输入密码')
+      return
+    }
+  } else {
+    // 短信登录校验
+    if (!form.phone.trim()) {
+      ElMessage.warning('请输入手机号')
+      return
+    }
+    if (!form.captcha.trim()) {
+      ElMessage.warning('请输入验证码')
+      return
+    }
+  }
+  
   loading.value = true
   
   // 模拟登录
   setTimeout(() => {
     loading.value = false
+    ElMessage.success('登录成功')
     emit('login-success')
   }, 1000)
 }
@@ -264,84 +256,19 @@ const handleLogin = async () => {
 .left-section {
   flex: 1;
   position: relative;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-width: 800px;
+  overflow: hidden;
 }
 
 .background-container {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-image: url('/登陆banner.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.brand-info {
-  text-align: center;
-}
-
-.logo-container {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.logo-box {
-  width: 50px;
-  height: 50px;
-  background: #409eff;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-icon {
-  width: 34px;
-  height: 34px;
-  fill: white;
-}
-
-.brand-text {
-  text-align: left;
-}
-
-.brand-title {
-  font-size: 32px;
-  font-weight: 600;
-  color: #1d2129;
-  margin: 0;
-  line-height: 1.2;
-}
-
-.brand-subtitle {
-  font-size: 16px;
-  color: #4a6fa0;
-  margin: 8px 0 0;
-  line-height: 1.2;
-}
-
-.features {
-  display: flex;
-  gap: 21px;
-  justify-content: center;
-  padding-top: 10px;
-}
-
-.feature-item {
-  display: flex;
-  align-items: center;
-  gap: 3.5px;
-  font-size: 18px;
-  color: #3a5a80;
-}
-
-.feature-icon {
-  width: 18px;
-  height: 18px;
-  color: #3a5a80;
-}
 
 .copyright {
   position: absolute;
@@ -435,11 +362,16 @@ const handleLogin = async () => {
   box-shadow: 0 0 0 0 rgba(64, 158, 255, 0.2);
 }
 
+.login-form :deep(.el-input__prefix) {
+  display: flex;
+  align-items: center;
+}
+
 .input-icon {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   color: #c9cdd4;
-  margin-right: 3px;
+  margin-right: 8px;
 }
 
 .toggle-password {
